@@ -1,0 +1,31 @@
+{
+  "name": "rj-dev-migration-toolkit",
+  "version": "1.0.0",
+  "description": "AI-powered migration pipeline: Java Servlet/JSP/ExtJS → Spring Boot 3.x/4.x + React. Works with GitHub Copilot, Claude Code, Antigravity, Codex, and Cursor.",
+  "author": "migration-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "skills",
+    "migration",
+    "spring-boot",
+    "react",
+    "servlet",
+    "extjs",
+    "copilot",
+    "claude",
+    "codex",
+    "cursor",
+    "antigravity"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/org/rj-dev-migration-toolkit"
+  },
+  "plugin": {
+    "skills": "skills/",
+    "agents": "agents/",
+    "prompts": "prompts/",
+    "instructions": "instructions/"
+  }
+}
