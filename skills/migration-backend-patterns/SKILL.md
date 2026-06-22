@@ -4,7 +4,7 @@ description: "Spring Boot 4.x migration patterns for converting legacy servlets,
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
-  version: "1.0"
+  version: "1.2"
   references:
     - skill://migration-java-styleguide
 ---
@@ -96,7 +96,7 @@ public class EntitySpecifications {
     }
 
     private static Specification<EntityEntity> hasStatus(String status) {
-        return (root, query, cb) -> status == null ? null :
+        return (root, query, cb) -> status == null ? null : 
             cb.equal(root.get("status"), status);
     }
 }
@@ -104,18 +104,18 @@ public class EntitySpecifications {
 // Repository using specifications
 public interface EntityRepository extends JpaRepository<EntityEntity, Long>,
         JpaSpecificationExecutor<EntityEntity> {
-
+    
     // Simple queries as method names
     Optional<EntityEntity> findByIdAndFirmId(Long id, Long firmId);
-
+    
     // Complex queries as @Query
     @Query("""
-        SELECT e FROM EntityEntity e
-        JOIN FETCH e.details d
+        SELECT e FROM EntityEntity e 
+        JOIN FETCH e.details d 
         WHERE e.firmId = :firmId AND e.status IN :statuses
         """)
     List<EntityEntity> findActiveWithDetails(
-        @Param("firmId") Long firmId,
+        @Param("firmId") Long firmId, 
         @Param("statuses") List<String> statuses);
 }
 ```
@@ -187,7 +187,7 @@ class EntityControllerTest {
     @WithMockUser(roles = "USER")
     void list_authenticated_returns200() throws Exception {
         when(service.search(any(), any())).thenReturn(pagedResponse());
-
+        
         mockMvc.perform(get("/api/v1/entities")
                 .param("status", "ACTIVE")
                 .param("page", "0")
@@ -212,9 +212,9 @@ class EntityServiceImplTest {
     void findById_exists_returnsResponse() {
         var entity = TestFixtures.entityWith(id(1L), name("Test"));
         when(repository.findByIdAndFirmId(1L, FIRM_ID)).thenReturn(Optional.of(entity));
-
+        
         var result = service.findById(1L);
-
+        
         assertThat(result.name()).isEqualTo("Test");
     }
 }
@@ -242,7 +242,7 @@ class EntityIntegrationTest {
         // Create
         var created = rest.postForEntity("/api/v1/entities", request, EntityResponse.class);
         assertThat(created.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
+        
         // Read
         var fetched = rest.getForEntity("/api/v1/entities/" + id, EntityResponse.class);
         assertThat(fetched.getBody().name()).isEqualTo("Test");
@@ -333,7 +333,7 @@ public record ProjectResponse(
 ) {}
 ```
 
-### TestContainers with @ServiceConnection (Spring Boot 3.1+)
+### Testcontainers with @ServiceConnection (Spring Boot 4.x)
 ```java
 @SpringBootTest
 @Testcontainers

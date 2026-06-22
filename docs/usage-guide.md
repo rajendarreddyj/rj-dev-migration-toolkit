@@ -242,7 +242,7 @@ Or with specifics:
 
 ```
 Generate a GitHub Actions CI/CD pipeline for the migrated application:
-- Backend: Spring Boot 3.x, Java 21, Maven
+- Backend: Spring Boot 4.x, Java 25, Maven
 - Frontend: React 19, TypeScript, Vite
 - Database: PostgreSQL + Flyway
 - Feature flags: Togglz (flag config from database)

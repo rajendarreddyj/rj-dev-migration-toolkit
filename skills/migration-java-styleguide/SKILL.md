@@ -4,7 +4,7 @@ description: "Google Java Style Guide + Spring Boot 4 best practices for migrate
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
-  version: "1.0"
+  version: "1.1"
   references:
     - https://google.github.io/styleguide/javaguide.html
 ---

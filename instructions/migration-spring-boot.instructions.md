@@ -1,6 +1,6 @@
 ---
 name: migration-spring-boot
-description: 'Coding standards for Spring Boot 3.x/4.x migrated backend code'
+description: 'Coding standards for Spring Boot 4.x migrated backend code'
 applyTo: '**/src/main/java/**/*.java, **/src/test/java/**/*.java'
 ---
 

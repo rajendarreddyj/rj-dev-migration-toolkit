@@ -1,6 +1,6 @@
 # Migration Toolkit — Servlet/JSP/ExtJS → Spring Boot + React
 
-An AI-powered migration toolkit that orchestrates the incremental modernization of legacy Java Servlet, JSP, and ExtJS applications into Spring Boot 3.x + React (TypeScript) with full TDD coverage, feature flag gating, and production-safe Strangler Fig cutover.
+An AI-powered migration toolkit that orchestrates the incremental modernization of legacy Java Servlet, JSP, and ExtJS applications into Spring Boot 4.x + React (TypeScript) with full TDD coverage, feature flag gating, and production-safe Strangler Fig cutover.
 
 ## What It Does
 
@@ -113,7 +113,7 @@ cp -r rj-dev-migration-toolkit/templates/  .
 
 - **VS Code Insiders** with GitHub Copilot (agent mode enabled)
 - **Legacy codebase** with Java Servlets, JSPs, and/or ExtJS views
-- **Target stack**: Spring Boot 3.x, React 19+, TypeScript, Tailwind CSS
+- **Target stack**: Spring Boot 4.x, React 19+, TypeScript, Tailwind CSS
 
 ## Quick Start
 
@@ -205,7 +205,7 @@ The toolkit enforces two sets of auto-applied coding standards:
 ### Target Stack
 
 Edit the agents and instructions to match your target stack. The toolkit is designed for:
-- **Backend**: Spring Boot 3.x, Java 21+, PostgreSQL, Flyway
+- **Backend**: Spring Boot 4.x, Java 25, PostgreSQL, Flyway
 - **Frontend**: React 19, TypeScript 5, Tailwind CSS, TanStack Query v5
 
 To change (e.g., to MySQL, Vue.js, or Kotlin), update:

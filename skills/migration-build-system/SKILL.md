@@ -4,7 +4,7 @@ description: "Detect existing build system (Maven/Gradle), analyze module struct
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
-  version: "1.0"
+  version: "1.1"
   references:
     - skill://migration-backend-patterns
     - skill://migration-discovery
@@ -54,7 +54,7 @@ build_system:
   type: maven | gradle
   wrapper: true | false
   version: "3.9.x" | "8.x"  # from wrapper properties
-
+  
 project_structure:
   packaging: pom | jar | war  # root packaging
   multi_module: true | false
@@ -381,7 +381,7 @@ build_analysis:
   is_multi_module: true | false
   modules_list: [...]
   spring_boot_present: true | false
-  spring_boot_version: "3.x.x" | null
+  spring_boot_version: "4.x.x" | null
   target_module_candidates:
     - module: "app-web"
       reason: "Already has Spring Boot config and controllers"

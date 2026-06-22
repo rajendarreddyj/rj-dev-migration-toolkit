@@ -4,7 +4,7 @@
 
 1. **VS Code Insiders** with GitHub Copilot Chat (agent mode)
 2. **A legacy Java codebase** containing Servlets, JSPs, and/or ExtJS
-3. **Target project skeleton** — Spring Boot 3.x + React (or your target stack)
+3. **Target project skeleton** — Spring Boot 4.x + React (or your target stack)
 
 ## Step 1: Install the Plugin
 

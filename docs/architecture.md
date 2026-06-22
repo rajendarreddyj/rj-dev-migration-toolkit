@@ -85,8 +85,8 @@ New Route ──[feature flag ON]──► Spring Boot Controller
 
 | Layer | Default | Alternatives |
 |-------|---------|-------------|
-| Backend framework | Spring Boot 3.x | Quarkus, Micronaut |
-| Language | Java 21 | Kotlin, Scala |
+| Backend framework | Spring Boot 4.x | Quarkus, Micronaut |
+| Language | Java 25 | Kotlin, Scala |
 | Build tool | Maven/Gradle | - |
 | Database migration | Flyway | Liquibase |
 | Feature flags | Togglz | LaunchDarkly, Unleash |

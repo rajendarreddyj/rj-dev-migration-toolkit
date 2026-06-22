@@ -1,6 +1,6 @@
 # AGENTS.md — Migration Toolkit Plugin
 
-> AI-powered migration pipeline: Java Servlet/JSP/ExtJS → Spring Boot 3.x/4.x + React
+> AI-powered migration pipeline: Java Servlet/JSP/ExtJS → Spring Boot 4.x + React
 > 
 > **Compatible with:** GitHub Copilot (VS Code), Claude Code, Antigravity, Codex (App/CLI), Cursor
 
