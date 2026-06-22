@@ -10,7 +10,7 @@
 
 2. Update `skills/migration-backend-patterns/SKILL.md`:
    - Replace Java conversion recipes with Kotlin equivalents
-   - Update dr-jskill patterns to Kotlin idioms
+   - Update Spring Boot 4 patterns to Kotlin idioms
 
 3. Update `agents/migration-backend.agent.md`:
    - Change system prompt to reference Kotlin style guide

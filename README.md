@@ -145,12 +145,12 @@ cp -r rj-dev-migration-toolkit/templates/  .
 
 | Skill | Purpose |
 |-------|---------|
-| `migration-java-styleguide` | Google Java Style + dr-jskill conventions |
+| `migration-java-styleguide` | Google Java Style conventions |
 | `migration-build-system` | Detect Maven/Gradle, module strategy brainstorming |
 | `migration-api-gap-analysis` | Detect missing endpoints for UI integration |
 | `migration-strangler-fig` | API compatibility, dual-run, traffic routing |
 | `migration-discovery` | Search patterns for legacy code analysis |
-| `migration-backend-patterns` | Servlet→Controller recipes + dr-jskill |
+| `migration-backend-patterns` | Servlet→Controller recipes |
 | `migration-frontend-patterns` | ExtJS→React component mapping |
 | `migration-tdd-patterns` | Parity tests, dual-state flag tests |
 | `migration-toolkit-reference` | Quick reference, RALPH loop, cross-tool compat |

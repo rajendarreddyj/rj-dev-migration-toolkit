@@ -1,0 +1,11 @@
+{
+  "name": "migration-toolkit",
+  "description": "Policy for rj-dev-migration-toolkit — a markdown/YAML AI agent plugin. Disables checks that require conventional paths (.github/agents/, .github/skills/) since this repo IS the plugin and keeps agents/skills at root (agents/, skills/) per plugin conventions. Also disables observability (OpenTelemetry n/a for plugin-only repos).",
+  "criteria": {
+    "disable": [
+      "observability",
+      "custom-agents",
+      "copilot-skills"
+    ]
+  }
+}

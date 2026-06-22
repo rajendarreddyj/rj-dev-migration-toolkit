@@ -1,6 +1,6 @@
 ---
 name: migration-build-system
-description: "Detect existing build system (Maven/Gradle), analyze module structure, and brainstorm whether migration requires a new module or code in existing modules. References dr-jskill project structure conventions. Triggers: 'build system', 'maven module', 'gradle module', 'multi-module', 'add module', 'project structure', 'module layout'."
+description: "Detect existing build system (Maven/Gradle), analyze module structure, and brainstorm whether migration requires a new module or code in existing modules. Covers Spring Boot 4 architecture patterns (layered, package-by-module, modular-monolith). Triggers: 'build system', 'maven module', 'gradle module', 'multi-module', 'add module', 'project structure', 'module layout'."
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
@@ -8,7 +8,6 @@ metadata:
   references:
     - skill://migration-backend-patterns
     - skill://migration-discovery
-    - https://github.com/jdubois/dr-jskill
 ---
 
 # Build System & Module Strategy Skill
@@ -55,7 +54,7 @@ build_system:
   type: maven | gradle
   wrapper: true | false
   version: "3.9.x" | "8.x"  # from wrapper properties
-  
+
 project_structure:
   packaging: pom | jar | war  # root packaging
   multi_module: true | false
@@ -392,30 +391,40 @@ build_analysis:
 
 ---
 
-## dr-jskill Project Structure Reference
+## Spring Boot Architecture Reference
 
-Following [dr-jskill](https://github.com/jdubois/dr-jskill) conventions, the target Spring Boot module should include:
+The target Spring Boot 4 module should follow one of these patterns based on domain complexity. Use the brainstorming questions below to choose the right one.
+
+| Pattern | Use when | Complexity |
+|---------|----------|------------|
+| `layered` | CRUD services, prototypes, MVPs | Low |
+| `package-by-module` | 3-5 distinct features with moderate growth | Low-Medium |
+| `modular-monolith` | Module boundaries matter, Spring Modulith justified | Medium |
+| `ddd-hexagonal` | Complex domains, CQRS, strong infrastructure isolation | High |
+
+### Required Artifacts for Target Spring Boot Module
 
 | Artifact | Purpose |
 |----------|---------|
-| `pom.xml` | Maven descriptor with Spring Boot parent, dependencies |
+| `pom.xml` | Maven descriptor with Spring Boot 4 parent, dependencies |
 | `.gitignore` | Java/Maven + IDE + Docker + Node excludes |
-| `.editorconfig` | 4-space Java, 2-space YAML/JS, LF endings |
+| `.editorconfig` | 2-space Java/YAML indent, LF line endings |
 | `.env.sample` | Documented env vars (never commit real `.env`) |
 | `compose.yaml` | Dev database via `spring-boot-docker-compose` |
-| `Dockerfile` | Production JVM image (jlink + distroless) |
 | `src/main/resources/application.properties` | Properties files (not YAML) |
 
-### Key dr-jskill Conventions Applied to Migration
+### Key Spring Boot 4 Conventions Applied to Migration
 
 1. **Properties over YAML** — Use `application.properties`, not `.yml`
-2. **PostgreSQL by default** — Use Spring Data JPA + PostgreSQL
-3. **Testcontainers for integration tests** — `@ServiceConnection` annotation
+2. **Spring Data JPA + PostgreSQL** — Default persistence stack
+3. **Testcontainers 2.x for integration tests** — `@ServiceConnection` annotation
 4. **Docker Compose for dev** — `spring-boot-docker-compose` auto-starts DB
 5. **Service layer only when needed** — Simple CRUD can skip service layer
 6. **Maven for dependency management** — Prefer Maven unless project already uses Gradle
-7. **Records for DTOs** — Java records for request/response types
+7. **Records for DTOs** — Java 25 records for request/response types
 8. **Actuator always included** — Production readiness endpoints
+9. **JSpecify for null-safety** — Add `package-info.java` with `@NullMarked` per package
+10. **Spring Modulith** — Add when module boundaries need enforcement across feature areas
 
 ---
 
@@ -429,6 +438,6 @@ After module decision and scaffolding:
 - [ ] Decision documented in `context/migration/{module}/module-strategy.md`
 - [ ] New module (if created) builds: `mvn compile -pl {module}` or `gradle :{module}:build`
 - [ ] New module registered in parent build descriptor
-- [ ] Package structure follows dr-jskill convention
+- [ ] Package structure follows chosen architecture pattern (layered / package-by-module / modular-monolith)
 - [ ] Dependencies inherit from parent (no version hardcoding)
 - [ ] Tests run in isolation: `mvn test -pl {module}` or `gradle :{module}:test`

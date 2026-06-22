@@ -1,20 +1,19 @@
 ---
 name: migration-backend-patterns
-description: "Spring Boot 3.x migration patterns for converting legacy servlets, filters, and DAOs. Covers layered architecture, error handling, pagination, and testing. References Google Java Style Guide and dr-jskill conventions. Triggers: 'convert servlet', 'spring boot migration', 'servlet to controller', 'dao to repository', 'migrate backend'."
+description: "Spring Boot 4.x migration patterns for converting legacy servlets, filters, and DAOs. Covers layered architecture, error handling, pagination, and testing. References Google Java Style Guide and Spring Boot 4 architecture patterns. Triggers: 'convert servlet', 'spring boot migration', 'servlet to controller', 'dao to repository', 'migrate backend'."
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
-  version: "1.1"
+  version: "1.0"
   references:
     - skill://migration-java-styleguide
-    - https://github.com/jdubois/dr-jskill
 ---
 
 # Backend Migration Patterns Skill
 
-Reference patterns for converting legacy Java web components to Spring Boot 3.x.
+Reference patterns for converting legacy Java web components to Spring Boot 4.x with Java 25.
 
-> **Style:** All code in this skill follows the `migration-java-styleguide` skill (Google Java Style + dr-jskill conventions). Key: 2-space indent, K&R braces, records for DTOs, text blocks for SQL.
+> **Style:** All code in this skill follows the `migration-java-styleguide` skill (Google Java Style + Spring Boot 4 conventions). Key: 2-space indent, K&R braces, records for DTOs, text blocks for SQL.
 
 ## Layer Mapping
 
@@ -97,7 +96,7 @@ public class EntitySpecifications {
     }
 
     private static Specification<EntityEntity> hasStatus(String status) {
-        return (root, query, cb) -> status == null ? null : 
+        return (root, query, cb) -> status == null ? null :
             cb.equal(root.get("status"), status);
     }
 }
@@ -105,18 +104,18 @@ public class EntitySpecifications {
 // Repository using specifications
 public interface EntityRepository extends JpaRepository<EntityEntity, Long>,
         JpaSpecificationExecutor<EntityEntity> {
-    
+
     // Simple queries as method names
     Optional<EntityEntity> findByIdAndFirmId(Long id, Long firmId);
-    
+
     // Complex queries as @Query
     @Query("""
-        SELECT e FROM EntityEntity e 
-        JOIN FETCH e.details d 
+        SELECT e FROM EntityEntity e
+        JOIN FETCH e.details d
         WHERE e.firmId = :firmId AND e.status IN :statuses
         """)
     List<EntityEntity> findActiveWithDetails(
-        @Param("firmId") Long firmId, 
+        @Param("firmId") Long firmId,
         @Param("statuses") List<String> statuses);
 }
 ```
@@ -188,7 +187,7 @@ class EntityControllerTest {
     @WithMockUser(roles = "USER")
     void list_authenticated_returns200() throws Exception {
         when(service.search(any(), any())).thenReturn(pagedResponse());
-        
+
         mockMvc.perform(get("/api/v1/entities")
                 .param("status", "ACTIVE")
                 .param("page", "0")
@@ -213,9 +212,9 @@ class EntityServiceImplTest {
     void findById_exists_returnsResponse() {
         var entity = TestFixtures.entityWith(id(1L), name("Test"));
         when(repository.findByIdAndFirmId(1L, FIRM_ID)).thenReturn(Optional.of(entity));
-        
+
         var result = service.findById(1L);
-        
+
         assertThat(result.name()).isEqualTo("Test");
     }
 }
@@ -243,7 +242,7 @@ class EntityIntegrationTest {
         // Create
         var created = rest.postForEntity("/api/v1/entities", request, EntityResponse.class);
         assertThat(created.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        
+
         // Read
         var fetched = rest.getForEntity("/api/v1/entities/" + id, EntityResponse.class);
         assertThat(fetched.getBody().name()).isEqualTo("Test");
@@ -274,13 +273,13 @@ public record PagedResponse<T>(
 }
 ```
 
-## dr-jskill Reference Patterns
+## Spring Boot Reference Patterns
 
-Best practices adopted from [dr-jskill](https://github.com/jdubois/dr-jskill) for Spring Boot scaffolding.
+Best practices adopted from [Spring Boot](https://github.com/jdubois/Spring Boot) for Spring Boot scaffolding.
 
-### Project Bootstrap (dr-jskill style)
+### Project Bootstrap (Spring Boot style)
 ```properties
-# application.properties (NOT YAML — dr-jskill convention)
+# application.properties (NOT YAML — Spring Boot convention)
 spring.application.name=${MODULE_NAME}
 server.port=8080
 spring.datasource.url=jdbc:postgresql://localhost:5432/${DB_NAME}
@@ -289,7 +288,7 @@ spring.jpa.hibernate.ddl-auto=validate
 spring.flyway.enabled=true
 ```
 
-### Simple CRUD Without Service Layer (dr-jskill pattern)
+### Simple CRUD Without Service Layer (Spring Boot pattern)
 For entities with no business logic beyond CRUD, skip the service layer:
 ```java
 @RestController
@@ -363,7 +362,7 @@ Page<ProjectEntity> findByFirmAndStatus(
     Pageable pageable);
 ```
 
-### Environment-Based Configuration (dr-jskill pattern)
+### Environment-Based Configuration (Spring Boot pattern)
 ```
 # .env (gitignored — local secrets)
 DB_PASSWORD=localpass123

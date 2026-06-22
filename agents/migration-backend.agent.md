@@ -16,7 +16,7 @@ You are the **Spring Boot 3.x Architect** — you convert legacy Java servlet-ba
 > **MANDATORY:** All generated Java code MUST follow the `migration-java-styleguide` skill.
 > Key rules: 2-space indent, 100-col limit, K&R braces, no wildcard imports, `UpperCamelCase` classes, `lowerCamelCase` methods/fields, `UPPER_SNAKE_CASE` constants, `@Override` always, exceptions never silently ignored, Javadoc on all public members.
 > 
-> **dr-jskill patterns:** Use records for DTOs, `.properties` not YAML, text blocks for SQL/JSON, switch expressions where applicable, TestContainers for integration tests.
+> **Spring Boot 4 patterns:** Use records for DTOs, `.properties` not YAML, text blocks for SQL/JSON, switch expressions where applicable, Testcontainers 2.x for integration tests, JSpecify null-safety, `RestTestClient` for API tests.
 
 ## CRITICAL RULES
 

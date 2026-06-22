@@ -6,7 +6,7 @@ applyTo: '**/src/main/java/**/*.java, **/src/test/java/**/*.java'
 
 # Spring Boot Migration Coding Standards
 
-> **Style Reference:** Follows [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) + [dr-jskill](https://github.com/jdubois/dr-jskill) best practices.
+> **Style Reference:** Follows [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) + Spring Boot 4 architecture best practices.
 > See `migration-java-styleguide` skill for detailed formatting, naming, and Javadoc rules.
 > **Spring Boot 4 Migration:** See [Spring Boot 4.0 Migration Guide](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide) for breaking changes.
 

@@ -22,6 +22,20 @@
     "type": "git",
     "url": "https://github.com/org/rj-dev-migration-toolkit"
   },
+  "scripts": {
+    "build": "markdownlint --config .markdownlint.json \"**/*.md\" --ignore-path .gitignore",
+    "test": "npm run lint",
+    "lint": "markdownlint --config .markdownlint.json \"**/*.md\" --ignore-path .gitignore",
+    "format": "prettier --write \"**/*.md\" --ignore-path .gitignore",
+    "format:check": "prettier --check \"**/*.md\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.49.0",
+    "prettier": "^3.5.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "plugin": {
     "skills": "skills/",
     "agents": "agents/",

@@ -1,18 +1,17 @@
 ---
 name: migration-java-styleguide
-description: "Google Java Style Guide + dr-jskill best practices for migrated Spring Boot code. Enforces formatting, naming, Javadoc, and programming practices. Reference: https://google.github.io/styleguide/javaguide.html. Triggers: 'java style', 'code style', 'naming convention', 'formatting', 'javadoc', 'Google style'."
+description: "Google Java Style Guide + Spring Boot 4 best practices for migrated Spring Boot code. Enforces formatting, naming, Javadoc, and programming practices. Reference: https://google.github.io/styleguide/javaguide.html. Triggers: 'java style', 'code style', 'naming convention', 'formatting', 'javadoc', 'Google style'."
 compatibility: IDE-agnostic
 metadata:
   author: migration-toolkit
   version: "1.0"
   references:
     - https://google.github.io/styleguide/javaguide.html
-    - https://github.com/jdubois/dr-jskill
 ---
 
-# Java Style Guide for Migration (Google + dr-jskill)
+# Java Style Guide for Migration (Google Java Style + Spring Boot 4)
 
-Enforces Google Java Style Guide conventions with Spring Boot / dr-jskill best practices for all migrated backend code.
+Enforces Google Java Style Guide conventions with Spring Boot 4 / Java 25 best practices for all migrated backend code.
 
 ## Source File Structure
 
@@ -176,9 +175,9 @@ public ProjectResponse findById(Long id) { ... }
 - Never write `/** @return the id */` — write `/** Returns the ID. */` or `/** {@return the ID} */`
 - Single-line form allowed: `/** An especially short bit of Javadoc. */`
 
-## Spring Boot Specific (from dr-jskill)
+## Spring Boot Specific
 
-### Project Structure (dr-jskill pattern)
+### Project Structure (layered default)
 ```
 src/main/java/com/{org}/{app}/
 ├── Application.java           # @SpringBootApplication entry point
@@ -192,9 +191,10 @@ src/main/java/com/{org}/{app}/
 ```
 
 - Service layer is **optional** — only include if business logic exists beyond CRUD
-- For simple CRUD, controller can call repository directly (dr-jskill pattern)
+- For simple CRUD, controller can call repository directly (layered architecture)
+- For richer domains, use `package-by-module` or `modular-monolith` with Spring Modulith
 
-### Configuration (dr-jskill pattern)
+### Configuration
 - Use `.properties` files, NOT YAML
 - Externalize secrets via environment variables
 - Use `@ConfigurationProperties` for type safety
@@ -219,14 +219,16 @@ public record CreateProjectRequest(
 ) {}
 ```
 
-### Testing (Google + dr-jskill)
+### Testing (Google Java Style + Spring Boot 4)
 - Test class name: `{ClassUnderTest}Test` (e.g., `ProjectServiceTest`)
 - Test method name: `lowerCamelCase` with underscores separating logical components
   - `findById_existingProject_returnsResponse()`
   - `create_blankName_throwsValidationException()`
-- Use TestContainers with `@ServiceConnection` for integration tests
+- Use **Testcontainers 2.x** with `@ServiceConnection` for integration tests
+- Use `RestTestClient` for API-level tests (Spring Boot 4 replacement for `TestRestTemplate`)
 - AssertJ for assertions (preferred over JUnit assertions)
 - Given-When-Then structure within test body
+- Add `@NullMarked` package-level annotation where the module uses JSpecify null-safety
 
 ### Switch Expressions (Modern Java)
 ```java

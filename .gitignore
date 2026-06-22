@@ -15,3 +15,6 @@ target/
 # Context artifacts (per-project, not part of the plugin)
 context/migration/*/
 !context/migration/README.md
+
+# Local environment
+.env

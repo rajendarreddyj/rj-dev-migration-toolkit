@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run markdownlint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+        continue-on-error: true
+
+  validate:
+    name: Validate Agent & Skill Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check required skill directories have SKILL.md
+        run: |
+          failed=0
+          for dir in skills/*/; do
+            if [ ! -f "${dir}SKILL.md" ]; then
+              echo "ERROR: Missing SKILL.md in ${dir}"
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Check agent files exist
+        run: |
+          count=$(find agents/ -name "*.agent.md" | wc -l)
+          echo "Found $count agent files"
+          if [ "$count" -lt 1 ]; then
+            echo "ERROR: No agent files found in agents/"
+            exit 1
+          fi
+
+  apm:
+    name: APM Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: AgentRC Readiness
+        run: npx github:microsoft/agentrc readiness --fail-level 2 --policy ./policies/migration-toolkit.json
+
+      - name: APM Audit
+        uses: microsoft/apm-action@v1
+        with:
+          command: check
+        continue-on-error: true

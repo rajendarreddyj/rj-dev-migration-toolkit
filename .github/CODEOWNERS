@@ -1,0 +1,18 @@
+# CODEOWNERS
+# Each line defines ownership for paths. The last matching rule wins.
+# Format: <path> <@user-or-team>
+
+# Default owners for everything
+*       @migration-toolkit-maintainers
+
+# Skill files
+/skills/                @migration-toolkit-maintainers
+
+# Agent definitions
+/agents/                @migration-toolkit-maintainers
+
+# Instructions (coding standards) — require careful review
+/instructions/          @migration-toolkit-maintainers
+
+# CI/CD and repo config
+/.github/               @migration-toolkit-maintainers

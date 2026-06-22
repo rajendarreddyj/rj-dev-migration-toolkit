@@ -123,11 +123,11 @@ context/migration/
 
 | Skill | When Used | Key Content |
 |-------|-----------|-------------|
-| `migration-java-styleguide` | **All backend code** | Google Java Style + dr-jskill conventions |
+| `migration-java-styleguide` | **All backend code** | Google Java Style + Spring Boot 4 conventions |
 | `migration-api-gap-analysis` | **Phase 3 + Phase 5** | Detect missing endpoints for UI integration |
 | `migration-strangler-fig` | **All phases** | API compatibility, dual-run, traffic routing |
 | `migration-discovery` | Phase 1 | Search patterns for legacy code analysis |
-| `migration-backend-patterns` | Phase 4 | Servlet→Controller recipes + dr-jskill patterns |
+| `migration-backend-patterns` | Phase 4 | Servlet→Controller recipes + Spring Boot 4 patterns |
 | `migration-frontend-patterns` | Phase 5 | ExtJS→React conversion recipes |
 | `migration-tdd-patterns` | Phases 4-6 | Test patterns for parity validation |
 
