@@ -66,13 +66,13 @@ Add to your VS Code settings:
 
 Or clone and register:
 ```bash
-git clone https://github.com/{org}/rj-dev-migration-toolkit.git ~/.claude/plugins/migration-toolkit
+git clone https://github.com/rajendarreddyj/rj-dev-migration-toolkit.git ~/.claude/plugins/migration-toolkit
 ```
 
 ### Antigravity
 
 ```bash
-agy plugin install https://github.com/{org}/rj-dev-migration-toolkit
+agy plugin install https://github.com/rajendarreddyj/rj-dev-migration-toolkit
 ```
 
 ### Codex (App & CLI)
@@ -94,7 +94,7 @@ In Cursor Agent chat:
 ### As Git Submodule
 
 ```bash
-git submodule add https://github.com/{org}/rj-dev-migration-toolkit.git .github/plugins/migration-toolkit
+git submodule add https://github.com/rajendarreddyj/rj-dev-migration-toolkit.git .github/plugins/migration-toolkit
 ```
 
 ### Manual Copy
