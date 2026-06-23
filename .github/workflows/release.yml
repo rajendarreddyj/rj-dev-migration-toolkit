@@ -44,6 +44,7 @@ jobs:
         run: |
           npm version patch --no-git-tag-version
           NEW_VERSION=$(node -p "require('./package.json').version")
+          npm run plugin:version:set -- "$NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=v$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
@@ -53,7 +54,7 @@ jobs:
 
       - name: Commit, tag, and push
         run: |
-          git add package.json package-lock.json apm.yml
+          git add package.json package-lock.json apm.yml plugin.json .antigravity-plugin/manifest.json .claude-plugin/manifest.json .codex-plugin/manifest.json .cursor-plugin/manifest.json hooks/hooks.json hooks/hooks-codex.json hooks/hooks-cursor.json hooks/run-hook.cmd hooks/session-start hooks/session-start-codex
           git commit -m "chore(release): ${{ steps.version.outputs.tag }}"
           git tag "${{ steps.version.outputs.tag }}"
           git push origin main

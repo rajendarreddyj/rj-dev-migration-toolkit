@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# SessionStart hook for migration-toolkit plugin
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+bootstrap_file="${PLUGIN_ROOT}/skills/migration-toolkit-reference/SKILL.md"
+if [ -f "$bootstrap_file" ]; then
+  bootstrap_content="$(cat "$bootstrap_file")"
+else
+  bootstrap_content="Migration toolkit is active. Use the available agents, prompts, and skills in this repository."
+fi
+
+escape_for_json() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
+}
+
+bootstrap_escaped="$(escape_for_json "$bootstrap_content")"
+session_context="<EXTREMELY_IMPORTANT>\nYou are working with the migration-toolkit plugin.\n\nThe following reference skill content is included for startup context:\n\n${bootstrap_escaped}\n</EXTREMELY_IMPORTANT>"
+
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$session_context" | cat
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+fi
+
+exit 0

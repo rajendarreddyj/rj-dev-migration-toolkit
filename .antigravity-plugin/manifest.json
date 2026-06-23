@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "AI-powered migration pipeline: Java Servlet/JSP/ExtJS → Spring Boot 4.x + React",
   "skills": "skills/",
+  "hooks": "hooks/hooks.json",
   "agents": "agents/",
   "prompts": "prompts/",
   "instructions": "instructions/"

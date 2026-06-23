@@ -1,7 +1,7 @@
 {
   "name": "migration-toolkit",
-  "version": "1.0.0",
-  "description": "AI-powered migration pipeline: Java Servlet/JSP/ExtJS → Spring Boot 4.x + React",
+  "version": "1.0.4",
+  "description": "AI-powered migration pipeline: Java Servlet/JSP/ExtJS -> Spring Boot 4.x + React",
   "skills": "skills/",
   "agents": "agents/",
   "prompts": "prompts/",
