@@ -2,9 +2,16 @@
 name: migration-toolkit-reference
 description: "Quick reference for migration toolkit usage across supported harnesses, including agent roster, pipeline phases, and command shortcuts."
 compatibility: IDE-agnostic
+when_to_use:
+  - "quick command lookup for migration agents"
+  - "pipeline phase reference"
+  - "skill or instruction lookup"
+  - "suggest improvement to a migration skill"
+  - "skill learning, feedback, or self-improvement"
+  - "record reusable pattern or anti-pattern"
 metadata:
   author: migration-toolkit
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Migration Toolkit — Quick Reference
@@ -101,6 +108,12 @@ Use prompt: generate-cicd-pipeline.prompt.md
 
 # Export toolkit for use in another project
 Use prompt: export-migration-toolkit.prompt.md
+
+# Load snapshot context for a specific module + phase (resume without re-discovery)
+@Migration Coordinator load-context module:project-management phase:4
+
+# Manually write a phase snapshot now
+@Migration Coordinator snapshot module:project-management phase:4
 ```
 
 ## Directory Structure
@@ -108,9 +121,22 @@ Use prompt: export-migration-toolkit.prompt.md
 ```
 context/migration/
 ├── manifest.md                          # Overall progress tracking
+├── session-context.md                   # ← loaded at session start to resume any module
+├── skill-improvement-queue.md           # Pending skill improvement proposals
 ├── {module}/
 │   ├── discovery-report.md              # Phase 1 output
 │   ├── migration-plan.md                # Phase 2 output
+│   ├── conventions.md                   # Project-specific discovered conventions
+│   ├── learnings.md                     # Reusable patterns + anti-patterns
+│   ├── ralph-review.md                  # Latest RALPH cycle snapshot
+│   ├── snapshots/
+│   │   ├── phase-1-discovery.snap.md    # Compacted Phase 1 output
+│   │   ├── phase-2-plan.snap.md         # Compacted Phase 2 output
+│   │   ├── phase-3-api-gap-db.snap.md   # Compacted Phase 3 output
+│   │   ├── phase-4-backend.snap.md      # Compacted Phase 4 output
+│   │   ├── phase-5-frontend.snap.md     # Compacted Phase 5 output
+│   │   ├── phase-6-validate.snap.md     # Compacted Phase 6 output
+│   │   └── phase-7-cutover.snap.md      # Compacted Phase 7 output
 │   ├── backend/
 │   │   ├── api-contracts.md             # OpenAPI snippets
 │   │   ├── test-matrix.md              # Test coverage map
@@ -120,7 +146,7 @@ context/migration/
 │   │   ├── test-matrix.md              # Test coverage map
 │   │   └── implementation-log.md        # Per-component status
 │   ├── validation/
-│   │   ├── parity-report.md            # Phase 5 output
+│   │   ├── parity-report.md            # Phase 6 output
 │   │   └── regression-results.md       # Test run results
 │   └── cutover/
 │       ├── feature-flags.md            # Flag activation plan
@@ -170,6 +196,123 @@ DESIGN → IMPLEMENT → TEST (both states) → ROLLOUT (%) → MONITOR → CLEA
 - Phase 7 → Deployment requires explicit human go-ahead
 
 ---
+
+## Compacted Phase Output Protocol
+
+At the completion gate of every pipeline phase, agents MUST write a compacted snapshot. These snapshots serve as **resumable context** — they are loaded at the start of future sessions to eliminate re-discovery and prevent duplicate work.
+
+### When to Write a Snapshot
+
+| Gate | Trigger | File written |
+|------|---------|-------------|
+| Phase 1 complete | Discovery report finalised | `snapshots/phase-1-discovery.snap.md` |
+| Phase 2 approved | Human approves plan | `snapshots/phase-2-plan.snap.md` |
+| Phase 3 complete | API gaps resolved + Flyway scripts done | `snapshots/phase-3-api-gap-db.snap.md` |
+| Phase 4 gate pass | Backend tests green, no stubs | `snapshots/phase-4-backend.snap.md` |
+| Phase 5 gate pass | Frontend tests green, no stubs | `snapshots/phase-5-frontend.snap.md` |
+| Phase 6 complete | Parity ≥95% or accepted | `snapshots/phase-6-validate.snap.md` |
+| Phase 7 complete | Cutover executed | `snapshots/phase-7-cutover.snap.md` |
+
+Also update `context/migration/session-context.md` after **every** snapshot write.
+
+### Snapshot File Format
+
+Keep snapshots compact. Target **<80 lines** per file. Use YAML front-matter for machine-readable state, Markdown body for human-readable summary.
+
+```markdown
+---
+module: project-management
+phase: 4
+phase_name: backend
+status: complete          # complete | partial | blocked
+date: 2026-06-23
+parity_score: null        # filled from Phase 6
+agents_used:
+  - Migration Backend
+  - Migration TDD
+files_created:
+  - src/main/java/com/app/project/controller/ProjectController.java
+  - src/main/java/com/app/project/service/ProjectService.java
+  - src/test/java/com/app/project/controller/ProjectControllerTest.java
+open_items: []            # list blockers or deferred items
+---
+
+## Summary
+
+3 servlets converted: ProjectServlet, TaskServlet, CommentServlet.
+All JUnit 5 tests passing (23/23). Feature flags: `PROJECTS_V2`, `TASKS_V2`.
+
+## Key Decisions
+
+- Pagination uses 0-based index (legacy was 1-based — adapter added)
+- CSV export preserves legacy headers verbatim
+- DTO naming: snake_case for REST responses (API compat requirement)
+
+## Conventions Discovered
+
+- All date fields returned as ISO-8601 strings
+- Null optional fields omitted from JSON (not null-valued)
+
+## Pending for Phase 5
+
+- Frontend needs `GET /api/projects/{id}/members` — not yet implemented
+```
+
+### Session Context Index (`context/migration/session-context.md`)
+
+Maintained automatically. Always 1 file, always overwritten. Loaded by the `session-start` hook.
+
+```markdown
+---
+last_updated: 2026-06-23
+active_modules:
+  - name: project-management
+    current_phase: 5
+    last_snapshot: context/migration/project-management/snapshots/phase-4-backend.snap.md
+    status: in_progress
+  - name: task-management
+    current_phase: 2
+    last_snapshot: context/migration/task-management/snapshots/phase-2-plan.snap.md
+    status: awaiting_approval
+completed_modules:
+  - reporting
+  - user-management
+global_conventions:
+  - snake_case REST responses
+  - 0-based pagination
+  - ISO-8601 dates
+skill_improvement_queue: context/migration/skill-improvement-queue.md
+---
+
+## Resume Instructions
+
+To resume: `@Migration Coordinator status` then `@Migration Coordinator resume module:project-management`.
+Load latest snapshot before starting any phase to avoid re-discovery.
+```
+
+### How Agents Load Context at Session Start
+
+1. The `session-start` hook injects `skills/migration-toolkit-reference/SKILL.md` as `<EXTREMELY_IMPORTANT>` context (always)
+2. If `context/migration/session-context.md` exists → read it and announce active modules + phases
+3. Before starting a phase → read the previous phase’s `.snap.md` for that module
+4. Before Phase 1 of a new module → check `manifest.md` for global conventions already discovered
+
+### Snapshot Writing Rules
+
+- **Agents write snapshots themselves** — do not wait for a human prompt
+- Write the snapshot file **before** emitting the phase-complete message
+- If a phase is interrupted (blocked/partial): write a partial snapshot with `status: partial` and `open_items` populated
+- Do **not** duplicate full file contents into snapshots — reference paths only
+- Use bullet-point summaries, not prose paragraphs
+- Never exceed 80 lines per snapshot
+
+### Loading a Specific Snapshot (Manual)
+
+```
+@Migration Coordinator load-context module:project-management phase:4
+```
+
+This reads `context/migration/project-management/snapshots/phase-4-backend.snap.md` and sets active context before continuing.
 
 ## RALPH Loop (Review → Adapt → Learn → Plan → Handle)
 
@@ -235,3 +378,104 @@ After first module completes, RALPH learnings feed into brainstorming for module
 - Plan review → requires explicit human "approved"
 - Parity gaps after 2 loops → document + accept or fix
 - Cutover → requires explicit human "go"
+
+---
+
+## Skill Learning & Self-Improvement
+
+Any agent, human, or automated check can propose a change to any skill in this toolkit. The protocol below ensures suggestions are captured, reviewed, and — when approved — merged back into the relevant `SKILL.md`.
+
+### When to Trigger a Skill Improvement
+
+| Situation | Action |
+|-----------|--------|
+| An agent retried the same step ≥ 2 times due to a missing pattern | Propose new pattern to the owning skill |
+| A human correction overrides an agent decision | Capture as anti-pattern in the owning skill |
+| A pattern proved universally reusable across ≥ 2 modules | Promote from `learnings.md` to the skill |
+| A skill trigger description misses a real use-case | Propose updated `description` or `when_to_use` |
+| A code example in a skill is outdated or wrong | Propose a replacement example |
+| A new harness or tool is supported | Update harness compatibility tables |
+
+### Improvement Proposal Format
+
+When an agent identifies a skill improvement, it MUST emit a fenced `skill-improvement` block before continuing:
+
+```skill-improvement
+skill: <skill-name>            # e.g. migration-backend-patterns
+triggered_by: <why>           # e.g. "agent retried servlet conversion 3x - missing filter pattern"
+change_type: add|update|remove|fix
+section: <section heading>    # where in the SKILL.md the change belongs
+current: |                    # (omit if change_type=add)
+  existing text / example to replace
+proposed: |
+  new or replacement text / example
+confidence: high|medium|low   # high = proven across ≥2 modules; low = single observation
+requires_human_approval: true|false
+```
+
+**Rules:**
+- `confidence: high` improvements with `requires_human_approval: false` may be applied automatically by any agent after emitting the block.
+- `confidence: low` improvements are written to `context/migration/skill-improvement-queue.md` and reviewed at the next RALPH cycle.
+- An improvement that modifies `name`, `description`, or `when_to_use` always requires human approval.
+- Do **not** delete content from a skill without a `remove` block and human approval.
+
+### Improvement Queue File
+
+```
+context/migration/skill-improvement-queue.md
+```
+
+Format:
+```markdown
+## Queue
+
+### [PENDING] <skill-name> — <change_type> — <date>
+
+**Triggered by:** <agent name or human> during <phase> of <module>
+**Section:** <section heading>
+**Confidence:** <high|medium|low>
+
+**Current:**
+```
+...
+```
+
+**Proposed:**
+```
+...
+```
+
+**Decision:** PENDING | APPROVED | REJECTED
+**Applied:** false | <date>
+```
+
+### Applying an Approved Improvement
+
+```
+# Workflow
+1. Read skill-improvement-queue.md
+2. Filter entries where Decision=APPROVED and Applied=false
+3. For each: edit the relevant SKILL.md section
+4. Update queue entry: Applied=<today's date>
+5. Emit confirmation: "Applied improvement to <skill-name> § <section>"
+```
+
+### Built-in Self-Assessment Triggers
+
+The following events auto-trigger a skill self-assessment pass:
+
+- **End of any migration module** — all skills used during that module are evaluated for gaps
+- **3+ retries on a single step** — the owning skill is flagged immediately
+- **Human correction** — the correction is evaluated against the skill for coverage
+- **New module starts** — previously queued improvements are applied before Phase 1
+
+### Skill Health Checklist
+
+Run this checklist against any skill before closing a module:
+
+- [ ] All patterns observed during this module are represented
+- [ ] No outdated API/framework references remain
+- [ ] `when_to_use` covers all triggers actually encountered
+- [ ] Examples compile / pass lint (for code samples)
+- [ ] Anti-patterns section updated with new failures
+- [ ] Any pending queue items reviewed (APPROVE or REJECT)

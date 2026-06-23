@@ -2,6 +2,11 @@
 name: migration-tdd-patterns
 description: "TDD patterns for migration parity testing. Covers test-first methodology, parity assertions, dual-state feature flag testing, and regression prevention. Triggers: 'migration test', 'parity test', 'feature flag test', 'regression test', 'migration TDD'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "test shell generation before implementation"
+  - "parity assertion patterns for Phase 6"
+  - "dual-state feature flag test setup"
+  - "suggest improvement to TDD migration patterns"
 metadata:
   author: migration-toolkit
   version: "1.0"
@@ -142,10 +147,10 @@ void statusChangeToActive_notifiesManager() {
     // Arrange
     var entity = entityWith(status("DRAFT"), managerId(42L));
     when(repository.findById(1L)).thenReturn(Optional.of(entity));
-    
+
     // Act
     service.updateStatus(1L, "ACTIVE");
-    
+
     // Assert — side effect
     verify(notificationService).notify(
         eq(42L),

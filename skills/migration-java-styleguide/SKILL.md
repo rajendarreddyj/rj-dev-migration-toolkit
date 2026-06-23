@@ -2,6 +2,11 @@
 name: migration-java-styleguide
 description: "Google Java Style Guide + Spring Boot 4 best practices for migrated Spring Boot code. Enforces formatting, naming, Javadoc, and programming practices. Reference: https://google.github.io/styleguide/javaguide.html. Triggers: 'java style', 'code style', 'naming convention', 'formatting', 'javadoc', 'Google style'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "Java code formatting or naming review"
+  - "Javadoc requirements check"
+  - "Spring Boot 4 convention reference"
+  - "suggest improvement to Java style rules"
 metadata:
   author: migration-toolkit
   version: "1.1"

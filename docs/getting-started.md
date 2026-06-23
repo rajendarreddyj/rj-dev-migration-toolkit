@@ -33,6 +33,8 @@ Copy the template:
 cp rj-dev-migration-toolkit/templates/context/migration/README.md context/migration/
 ```
 
+The toolkit writes snapshot files and session context into this directory automatically. On your **next session start**, the hook reads `context/migration/session-context.md` (if present) and injects the current migration state as context — so agents can resume without re-discovery.
+
 ## Step 3: Run Your First Migration
 
 ### Option A: Full Module Migration (recommended)
@@ -75,6 +77,8 @@ The coordinator pauses for human approval at key checkpoints:
 - After backend tests pass (Phase 4 complete)
 - After parity validation (Phase 6 complete)
 
+At each gate, the coordinator also writes a **compacted phase snapshot** to `context/migration/{module}/snapshots/phase-N-*.snap.md`. These are loaded automatically in future sessions so work is never lost.
+
 ## Step 5: Feature Flag Cutover
 
 Once validated, the feature flag agent manages the rollout:
@@ -82,6 +86,22 @@ Once validated, the feature flag agent manages the rollout:
 - Canary release (small %)
 - Progressive rollout (10% → 50% → 100%)
 - Legacy decommission (remove old code)
+
+## Step 6: Resuming in a New Session
+
+The `session-start` hook automatically loads `context/migration/session-context.md` (written at each phase gate) and injects active module state as context. No manual steps needed — just open a new chat and agents will know where they left off.
+
+To manually restore context for a specific phase:
+
+```
+@Migration Coordinator load-context module:project-management phase:4
+```
+
+To force-write a snapshot at any point:
+
+```
+@Migration Coordinator snapshot module:project-management phase:4
+```
 
 ## Tips
 

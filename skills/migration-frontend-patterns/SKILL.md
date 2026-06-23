@@ -2,6 +2,11 @@
 name: migration-frontend-patterns
 description: "ExtJS-to-React conversion patterns including component mapping, store-to-query migration, and event handler translation. Triggers: 'convert extjs', 'extjs to react', 'migrate grid', 'migrate form', 'migrate frontend', 'store to query'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "ExtJS component to React conversion during Phase 5"
+  - "Ext.data.Store to TanStack Query migration"
+  - "grid/form/tree panel conversion"
+  - "suggest improvement to frontend migration patterns"
 metadata:
   author: migration-toolkit
   version: "1.0"
@@ -246,7 +251,7 @@ test('user list page shows paginated data', async ({ page }) => {
   await page.goto('/users');
   await expect(page.getByRole('table')).toBeVisible();
   await expect(page.getByRole('row')).toHaveCount(51); // header + 50 rows
-  
+
   // Pagination
   await page.getByRole('button', { name: 'Next' }).click();
   await expect(page.getByText('Showing 51-100')).toBeVisible();

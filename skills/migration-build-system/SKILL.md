@@ -2,6 +2,11 @@
 name: migration-build-system
 description: "Detect existing build system (Maven/Gradle), analyze module structure, and brainstorm whether migration requires a new module or code in existing modules. Covers Spring Boot 4 architecture patterns (layered, package-by-module, modular-monolith). Triggers: 'build system', 'maven module', 'gradle module', 'multi-module', 'add module', 'project structure', 'module layout'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "build system detection (Maven/Gradle)"
+  - "module strategy brainstorming"
+  - "project structure decisions during Phase 2"
+  - "suggest improvement to build system patterns"
 metadata:
   author: migration-toolkit
   version: "1.1"
@@ -54,7 +59,7 @@ build_system:
   type: maven | gradle
   wrapper: true | false
   version: "3.9.x" | "8.x"  # from wrapper properties
-  
+
 project_structure:
   packaging: pom | jar | war  # root packaging
   multi_module: true | false

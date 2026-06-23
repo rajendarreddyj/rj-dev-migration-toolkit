@@ -2,6 +2,11 @@
 name: migration-strangler-fig
 description: "Strangler Fig pattern for incremental migration. Covers API compatibility layers, request routing, dual-run validation, and phased traffic shifting. Prevents big-bang migration failures. Triggers: 'strangler fig', 'api compatibility', 'incremental migration', 'dual run', 'traffic routing', 'reverse proxy', 'gradual migration', 'compatibility layer'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "incremental cutover strategy planning"
+  - "dual-run validation setup"
+  - "API compatibility layer design"
+  - "suggest improvement to strangler fig patterns"
 metadata:
   author: migration-toolkit
   version: "1.0"

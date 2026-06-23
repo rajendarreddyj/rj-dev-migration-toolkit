@@ -13,6 +13,8 @@ An AI-powered migration toolkit that orchestrates the incremental modernization 
 - **Validates** behavioral parity between legacy and new implementations
 - **Manages** feature flag lifecycle for safe incremental rollout
 - **Generates** CI/CD pipelines, OpenAPI specs, and deployment checklists
+- **Snapshots** compacted phase output at every gate for resumable sessions
+- **Self-improves** skills by capturing patterns, anti-patterns, and improvement proposals during every run
 
 ## Architecture
 
@@ -126,6 +128,12 @@ cp -r rj-dev-migration-toolkit/templates/  .
 
 # 3. Resume after pause
 @Migration Coordinator resume module:project-management
+
+# 4. Load snapshot to restore phase context (e.g. after session restart)
+@Migration Coordinator load-context module:project-management phase:4
+
+# 5. Manually write a snapshot for the current phase
+@Migration Coordinator snapshot module:project-management phase:4
 ```
 
 ## Agent Roster
@@ -153,7 +161,7 @@ cp -r rj-dev-migration-toolkit/templates/  .
 | `migration-backend-patterns` | Servlet→Controller recipes |
 | `migration-frontend-patterns` | ExtJS→React component mapping |
 | `migration-tdd-patterns` | Parity tests, dual-state flag tests |
-| `migration-toolkit-reference` | Quick reference, RALPH loop, cross-tool compat |
+| `migration-toolkit-reference` | Quick reference, RALPH loop, snapshot protocol, self-improvement |
 
 ## Prompts
 

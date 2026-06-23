@@ -2,6 +2,11 @@
 name: migration-discovery
 description: "Patterns and techniques for analyzing legacy Java Servlet/JSP/ExtJS applications. Use when reverse-engineering a legacy codebase for migration planning. Triggers: 'discover legacy', 'analyze servlet', 'map endpoints', 'extract business rules', 'legacy analysis'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "legacy codebase reverse-engineering during Phase 1"
+  - "endpoint mapping from legacy servlets"
+  - "business rule extraction from JSP/ExtJS"
+  - "suggest improvement to discovery patterns"
 metadata:
   author: migration-toolkit
   version: "1.0"

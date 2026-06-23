@@ -79,7 +79,23 @@ What files/artifacts this agent produces.
 
 Create a new directory in `skills/` with a `SKILL.md`:
 
-```markdown
+```yaml
+---
+name: my-skill-name
+description: 'One-sentence description for skill routing'
+compatibility:
+  - github-copilot
+  - claude-code
+  - cursor
+  - codex
+when_to_use:
+  - describe the first trigger condition
+  - describe the second trigger condition
+metadata:
+  author: your-name
+  version: '1.0'
+---
+
 # Skill Name
 
 ## When to Use
@@ -90,6 +106,43 @@ The actual knowledge/patterns/rules.
 
 ## Examples
 Concrete examples of applying this skill.
+```
+
+> **Note**: The `when_to_use:` list in the YAML front-matter is used by the session hook and skill router to decide whether to inject this skill. Keep entries concise (one trigger per line).
+
+## Proposing Skill Improvements
+
+Any agent can propose an improvement to an existing skill by emitting a `skill-improvement` fenced block during a run:
+
+````
+```skill-improvement
+skill: migration-backend-patterns       # target skill name (no path)
+trigger: <what situation triggered this improvement>
+problem: <the current gap, wrong guidance, or missing pattern>
+proposed_fix: <the new or corrected guidance>
+example_before: |                        # optional
+  // old pattern
+example_after: |                         # optional
+  // new pattern
+confidence: high                         # high | low
+requires_human_approval: false           # true | false
+```
+````
+
+**Apply rules**:
+- `confidence: high` + `requires_human_approval: false` → auto-applied on next run, skill version bumped
+- `confidence: low` OR `requires_human_approval: true` → queued in `context/migration/skill-improvement-queue.md`
+
+To review the queue:
+
+```
+cat context/migration/skill-improvement-queue.md
+```
+
+To apply a queued item:
+
+```
+@Migration Coordinator apply-skill-improvement queue-id:3
 ```
 
 ## Adding New Prompts
@@ -135,3 +188,25 @@ The toolkit doesn't require environment variables, but some agents check for:
 |----------|---------|----------|
 | `FIGMA_MCP_TOKEN` | Figma MCP design integration | No (optional) |
 | `JIRA_BASE_URL` | Link to Jira tickets in reports | No (optional) |
+
+## Phase Snapshot Customization
+
+By default, snapshots are written at every pipeline gate. To change this behavior, edit `agents/migration-coordinator.agent.md` and locate the `## Phase Gate Actions` section.
+
+**Skip snapshots for fast local runs** (not recommended for multi-day migrations):
+
+```
+# In migration-coordinator.agent.md, under Phase Gate Actions:
+snapshot: disabled
+```
+
+**Custom snapshot path**:
+
+```
+snapshot_dir: my-team/migration-snapshots/{module}/
+```
+
+**Disable session-context.md auto-injection** (useful if you manage context manually):
+
+Remove or comment out the `context/migration/session-context.md` block from `hooks/session-start` and `hooks/session-start-codex`.
+

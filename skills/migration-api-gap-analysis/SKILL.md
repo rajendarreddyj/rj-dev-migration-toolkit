@@ -2,6 +2,11 @@
 name: migration-api-gap-analysis
 description: "Identifies missing REST endpoints needed for UI integration during migration. Analyzes frontend components to determine required API contracts, compares against existing/migrated backend endpoints, and produces a gap report with prioritized implementation backlog. Triggers: 'missing endpoint', 'api gap', 'frontend needs endpoint', 'UI integration', 'endpoint coverage', 'what APIs does the UI need', 'missing REST', 'api contract gap'."
 compatibility: IDE-agnostic
+when_to_use:
+  - "missing endpoint detection during Phase 3 or Phase 5"
+  - "UI integration gap analysis"
+  - "API contract generation"
+  - "suggest improvement to API gap analysis patterns"
 metadata:
   author: migration-toolkit
   version: "1.0"

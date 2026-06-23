@@ -21,8 +21,8 @@ The Migration Toolkit is a VS Code agent plugin. You interact with it through **
 | Check parity | `/validate-parity` |
 | See pipeline status | `@Migration Coordinator status` |
 | Resume after pause | `@Migration Coordinator resume module:{name}` |
-| Rollback to a phase | `@Migration Coordinator rollback module:{name} phase:{N}` |
-| Batch migrate | `/migrate-batch` |
+| Rollback to a phase | `@Migration Coordinator rollback module:{name} phase:{N}` || Restore session from snapshot | `@Migration Coordinator load-context module:{name} phase:{N}` |
+| Force-write a phase snapshot | `@Migration Coordinator snapshot module:{name} phase:{N}` || Batch migrate | `/migrate-batch` |
 | Generate OpenAPI spec | `/generate-openapi-spec` |
 | Generate CI/CD pipeline | `/generate-cicd-pipeline` |
 
@@ -327,6 +327,54 @@ The JSP uses:
 
 ---
 
+### Scenario 14: Resume a Migration in a New Session
+
+When you return the next day (or after VS Code restart), the session hook has already injected the last `session-context.md` snapshot as context. Just verify:
+
+```
+@Migration Coordinator status
+```
+
+If context was not auto-loaded (e.g. on a platform that doesn't support hooks), restore it manually:
+
+```
+@Migration Coordinator load-context module:project-management phase:4
+```
+
+Or load the raw snapshot file as context:
+
+```
+Read context/migration/project-management/snapshots/phase-4-backend.snap.md
+and resume from where we left off.
+```
+
+---
+
+### Scenario 15: Propose a Skill Improvement
+
+During or after a migration run, you can suggest an improvement to any skill:
+
+````
+```skill-improvement
+skill: migration-backend-patterns
+trigger: converted @WebServlet with thread-local request state
+problem: Current patterns don't cover ThreadLocal cleanup — causes request bleed in Spring Boot (shared JVM)
+proposed_fix: Add a section "ThreadLocal cleanup" under Servlet→Controller. Pattern: use @RequestScope bean instead of ThreadLocal.
+example_before: |
+  private static final ThreadLocal<User> currentUser = new ThreadLocal<>();
+example_after: |
+  @RequestScope
+  @Component
+  public class CurrentUserContext { private User user; ... }
+confidence: high
+requires_human_approval: false
+```
+````
+
+High-confidence improvements (`requires_human_approval: false`) are automatically applied to the skill on the next run. Low-confidence ones are queued in `context/migration/skill-improvement-queue.md` for your review.
+
+---
+
 ## Common Patterns & Tips
 
 ### Start Small, Validate Early
@@ -384,3 +432,7 @@ The `migration-toolkit-reference` skill loads automatically with the full comman
 | Want to start over | `@Migration Coordinator rollback module:{name} phase:1` |
 | Tests failing | Check discovery report — business rules may be incomplete |
 | API gaps found during frontend | Pipeline loops back automatically (max 2 times) |
+| Lost session context | Run `@Migration Coordinator load-context module:{name} phase:{N}` to restore from snapshot |
+| Snapshot not written | Run `@Migration Coordinator snapshot module:{name} phase:{N}` manually |
+| Lost session context | Run `@Migration Coordinator load-context module:{name} phase:{N}` to restore from snapshot |
+| Snapshot not written | Run `@Migration Coordinator snapshot module:{name} phase:{N}` manually |

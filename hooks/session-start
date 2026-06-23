@@ -13,6 +13,27 @@ else
   bootstrap_content="Migration toolkit is active. Use the available agents, prompts, and skills in this repository."
 fi
 
+# Load workspace-level session context if present (written at each phase gate)
+# Search from CWD upward for context/migration/session-context.md
+session_ctx_file=""
+search_dir="${PWD}"
+for _ in 1 2 3 4 5; do
+  candidate="${search_dir}/context/migration/session-context.md"
+  if [ -f "$candidate" ]; then
+    session_ctx_file="$candidate"
+    break
+  fi
+  parent="$(dirname "$search_dir")"
+  [ "$parent" = "$search_dir" ] && break
+  search_dir="$parent"
+done
+
+session_ctx_block=""
+if [ -n "$session_ctx_file" ]; then
+  session_ctx_content="$(cat "$session_ctx_file")"
+  session_ctx_block="\n\n## Active Session Context (from workspace)\n\n${session_ctx_content}"
+fi
+
 escape_for_json() {
   local s="$1"
   s="${s//\\/\\\\}"
@@ -23,7 +44,7 @@ escape_for_json() {
   printf '%s' "$s"
 }
 
-bootstrap_escaped="$(escape_for_json "$bootstrap_content")"
+bootstrap_escaped="$(escape_for_json "${bootstrap_content}${session_ctx_block}")"
 session_context="<EXTREMELY_IMPORTANT>\nYou are working with the migration-toolkit plugin.\n\nThe following reference skill content is included for startup context:\n\n${bootstrap_escaped}\n</EXTREMELY_IMPORTANT>"
 
 if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
