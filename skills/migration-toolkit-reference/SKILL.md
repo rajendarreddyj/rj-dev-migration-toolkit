@@ -1,3 +1,12 @@
+---
+name: migration-toolkit-reference
+description: "Quick reference for migration toolkit usage across supported harnesses, including agent roster, pipeline phases, and command shortcuts."
+compatibility: IDE-agnostic
+metadata:
+  author: migration-toolkit
+  version: "1.0"
+---
+
 # Migration Toolkit — Quick Reference
 
 > **Compatibility:** GitHub Copilot (VS Code), Claude Code, Antigravity, Codex (App/CLI), Cursor
