@@ -21,8 +21,10 @@ The Migration Toolkit is a VS Code agent plugin. You interact with it through **
 | Check parity | `/validate-parity` |
 | See pipeline status | `@Migration Coordinator status` |
 | Resume after pause | `@Migration Coordinator resume module:{name}` |
-| Rollback to a phase | `@Migration Coordinator rollback module:{name} phase:{N}` || Restore session from snapshot | `@Migration Coordinator load-context module:{name} phase:{N}` |
-| Force-write a phase snapshot | `@Migration Coordinator snapshot module:{name} phase:{N}` || Batch migrate | `/migrate-batch` |
+| Rollback to a phase | `@Migration Coordinator rollback module:{name} phase:{N}` |
+| Restore session from snapshot | `@Migration Coordinator load-context module:{name} phase:{N}` |
+| Force-write a phase snapshot | `@Migration Coordinator snapshot module:{name} phase:{N}` |
+| Batch migrate | `/migrate-batch` |
 | Generate OpenAPI spec | `/generate-openapi-spec` |
 | Generate CI/CD pipeline | `/generate-cicd-pipeline` |
 

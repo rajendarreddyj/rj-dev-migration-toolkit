@@ -209,4 +209,3 @@ snapshot_dir: my-team/migration-snapshots/{module}/
 **Disable session-context.md auto-injection** (useful if you manage context manually):
 
 Remove or comment out the `context/migration/session-context.md` block from `hooks/session-start` and `hooks/session-start-codex`.
-
