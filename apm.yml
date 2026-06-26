@@ -1,5 +1,5 @@
 name: rj-dev-migration-toolkit
-version: 1.0.8
+version: 1.0.9
 description: APM project for rj-dev-migration-toolkit
 author: Jagapathi, Rajendarreddy
 # Which agent platforms to deploy to.
