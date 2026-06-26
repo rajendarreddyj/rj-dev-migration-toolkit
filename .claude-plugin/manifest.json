@@ -6,5 +6,5 @@
   "agents": "agents/",
   "prompts": "prompts/",
   "instructions": "instructions/",
-  "hooks": "hooks/hooks.json"
+  "hooks": "hooks/hooks-claude.json"
 }

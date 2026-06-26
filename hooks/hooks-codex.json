@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${PLUGIN_ROOT}/hooks/run-hook.cmd\" session-start-codex",
+            "command": "node -e \"const p = process.env.COPILOT_PLUGIN_ROOT || process.env.PLUGIN_ROOT || '.'; require('child_process').execSync('node \\\"' + p + '/hooks/run-hook.js\\\" session-start-codex', { stdio: 'inherit' })\"",
             "async": false
           }
         ]
